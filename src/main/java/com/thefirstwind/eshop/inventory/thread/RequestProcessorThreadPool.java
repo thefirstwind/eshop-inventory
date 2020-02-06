@@ -21,10 +21,17 @@ public class RequestProcessorThreadPool {
 	 * 初始化将 RequestQueue和 线程池绑定在一起
 	 */
 	public RequestProcessorThreadPool() {
+		
+		// 内存队列的外部封装类 List 中 10个元素
 		RequestQueue requestQueue = RequestQueue.getInstance();
+		
+		// 初始化创建10个内存队列的 ArrayBlockingQueue对象
 		for(int i = 0 ; i < 10; i++) {
+
 			ArrayBlockingQueue<Request> queue = new ArrayBlockingQueue<Request>(100);
 			requestQueue.addQueue(queue);
+			
+			// 内存队列和线程池绑定
 			threadPool.submit(new RequestProcessorThread(queue));
 		}
 	}
@@ -52,6 +59,14 @@ public class RequestProcessorThreadPool {
 	 */
 	public static RequestProcessorThreadPool getInstance() {
 		return Singleton.getInstatnce();
+	}
+	/**
+	 * 初始化便捷方法
+	 * @param queue
+	 * 
+	 */
+	public static void init() {
+		getInstance();
 	}
 
 }

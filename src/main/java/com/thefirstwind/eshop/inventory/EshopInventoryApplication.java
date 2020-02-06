@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -19,6 +20,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
+import com.thefirstwind.eshop.inventory.listener.InitListener;
 
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.HostAndPort;
@@ -76,4 +78,17 @@ public class EshopInventoryApplication {
 		JedisCluster jedisCluster = new JedisCluster(jedisClusterNodes);
 		return jedisCluster;
 	}
+	
+    /**
+     * 注册监听器
+     * @return
+     */  
+    @Bean
+    public ServletListenerRegistrationBean<InitListener> servletListenerRegistrationBean() {
+    	ServletListenerRegistrationBean<InitListener> servletListenerRegistrationBean = 
+    			new ServletListenerRegistrationBean<InitListener>();
+    	servletListenerRegistrationBean.setListener(new InitListener());
+    	return servletListenerRegistrationBean;
+    }
+
 }

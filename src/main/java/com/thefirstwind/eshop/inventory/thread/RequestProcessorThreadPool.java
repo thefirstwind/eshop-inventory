@@ -1,7 +1,11 @@
 package com.thefirstwind.eshop.inventory.thread;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import com.thefirstwind.eshop.inventory.request.Request;
+import com.thefirstwind.eshop.inventory.request.RequestQueue;
 
 /**
  * 线程池：单例模式
@@ -17,7 +21,12 @@ public class RequestProcessorThreadPool {
 	 * 初始化将 RequestQueue和 线程池绑定在一起
 	 */
 	public RequestProcessorThreadPool() {
-//		RequestQueue requestQueue = new RequestQueue.getInstance();
+		RequestQueue requestQueue = RequestQueue.getInstance();
+		for(int i = 0 ; i < 10; i++) {
+			ArrayBlockingQueue<Request> queue = new ArrayBlockingQueue<Request>(100);
+			requestQueue.addQueue(queue);
+			threadPool.submit(new RequestProcessorThread(queue));
+		}
 	}
 	/**
 	 * 使用绝对线程安全的静态内部类方式，实现单例
